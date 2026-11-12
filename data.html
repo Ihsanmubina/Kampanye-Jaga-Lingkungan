@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data & Fakta - Hemat Energi</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Import Google Fonts & Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #10b981;       /* Hijau Energi */
+            --primary-dark: #059669;
+            --secondary: #3b82f6;     /* Biru Modern */
+            --bg-light: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1100px;
+            margin: 100px auto 60px auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.25);
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 8px 0 4px 0;
+        }
+
+        .stat-card .sub {
+            font-size: 12px;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        /* Navigation Tabs (Paginasi Utama) */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: #f9fafb;
+            color: var(--text-dark);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Tab Panels */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Card & Charts */
+        .content-box {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .content-box h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        tr:hover td {
+            background-color: #f0fdf4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+
+        /* Table Pagination Controls */
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-btn:not(:disabled):hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar FIXED (Tetap mempertahankan struktur asli Anda) -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="asset/logo-wikrama.png" alt="Logo Wikrama" class="logo-img">
+                Hemat<span>Energi</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="tentang.html">Tentang</a></li>
+                    <li><a href="data.html" class="active">Data & Fakta</a></li>
+                    <li><a href="#">Aksi & Rekomendasi</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard-wrapper">
+        <!-- Header Banner -->
+        <div class="page-header">
+            <h1 id="judul-kuesioner">Memuat Data...</h1>
+            <p id="subjudul-kuesioner"></p>
+        </div>
+
+        <!-- 4 Kartu Statistik Utama -->
+        <div class="summary-grid">
+            <div class="stat-card">
+                <div class="label">Total Responden</div>
+                <div class="value" id="stat-responden">-</div>
+                <div class="sub" id="stat-partisipasi">Partisipasi -%</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Rata-rata Skor</div>
+                <div class="value" id="stat-rata">-</div>
+                <div class="sub">Dari skala maksimal 4.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Kategori Sangat Baik</div>
+                <div class="value" id="stat-sangat-baik">-</div>
+                <div class="sub" id="stat-persen-sb">-% dari total siswa</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Jurusan Tertinggi</div>
+                <div class="value" id="stat-jurusan-top">-</div>
+                <div class="sub">Perilaku hemat energi terbaik</div>
+            </div>
+        </div>
+
+        <!-- Navigasi Paginasi Halaman (Tabs) -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="bukaTab('tab-ringkasan', this)">1. Ringkasan & Per Butir</button>
+            <button class="tab-btn" onclick="bukaTab('tab-jurusan', this)">2. Data Per Jurusan</button>
+            <button class="tab-btn" onclick="bukaTab('tab-rombel', this)">3. Data Per Rombel</button>
+            <button class="tab-btn" onclick="bukaTab('tab-rayon', this)">4. Rayon & Gaya Belajar</button>
+        </div>
+
+        <!-- HALAMAN 1: RINGKASAN & PER BUTIR -->
+        <div id="tab-ringkasan" class="tab-panel active">
+            <div class="grid-2">
+                <div class="content-box">
+                    <h3>Distribusi Kategori Perilaku</h3>
+                    <canvas id="chartKategori"></canvas>
+                </div>
+                <div class="content-box">
+                    <h3>Rata-rata Skor per Butir (P01 - P10)</h3>
+                    <canvas id="chartButir"></canvas>
+                </div>
+            </div>
+
+            <div class="content-box">
+                <h3>Detail Pernyataan Kuesioner</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Pernyataan</th>
+                                <th>Rata-rata</th>
+                                <th>Sering (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-butir"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 2: PER JURUSAN -->
+        <div id="tab-jurusan" class="tab-panel">
+            <div class="content-box">
+                <h3>Perbandingan Rata-rata Skor Antar Jurusan</h3>
+                <canvas id="chartJurusan" style="max-height: 350px;"></canvas>
+            </div>
+            <div class="content-box">
+                <h3>Rincian Data Per Jurusan</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama Jurusan</th>
+                                <th>Responden</th>
+                                <th>Rata-rata Skor</th>
+                                <th>Sangat Baik (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-jurusan"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 3: PER ROMBEL (Dengan Paginasi Tabel) -->
+        <div id="tab-rombel" class="tab-panel">
+            <div class="content-box">
+                <h3>Peringkat & Data Per Rombel (Kelas XI)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Rombel</th>
+                                <th>Jurusan</th>
+                                <th>Responden</th>
+                                <th>Rata-rata Skor</th>
+                                <th>Sangat Baik</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-rombel"></tbody>
+                    </table>
+                </div>
+                <!-- Kontrol Paginasi Tabel -->
+                <div class="pagination-controls">
+                    <button class="page-btn" id="btn-prev" onclick="gantiHalamanRombel(-1)">← Sebelumnya</button>
+                    <span id="info-halaman-rombel" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Halaman 1</span>
+                    <button class="page-btn" id="btn-next" onclick="gantiHalamanRombel(1)">Selanjutnya →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 4: RAYON & GAYA BELAJAR -->
+        <div id="tab-rayon" class="tab-panel">
+            <div class="grid-2">
+                <div class="content-box">
+                    <h3>Rata-rata Skor Berdasarkan Rayon</h3>
+                    <canvas id="chartRayon"></canvas>
+                </div>
+                <div class="content-box">
+                    <h3>Rata-rata Skor Berdasarkan Gaya Belajar</h3>
+                    <canvas id="chartGayaBelajar"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load File JS Data Anda -->
+    <script src="data-perilaku-energi.js"></script>
+    <script>
+        // Fungsi Pindah Tab (Paginasi Utama)
+        function bukaTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // Variabel Paginasi Tabel Rombel
+        let halamanRombel = 1;
+        const barisPerHalaman = 6;
+
+        function renderTabelRombel() {
+            const tbody = document.getElementById("tabel-rombel");
+            tbody.innerHTML = "";
+            
+            const dataRombel = DATA_ENERGI.per_rombel;
+            const totalHalaman = Math.ceil(dataRombel.length / barisPerHalaman);
+            const mulai = (halamanRombel - 1) * barisPerHalaman;
+            const akhir = mulai + barisPerHalaman;
+            const potonganData = dataRombel.slice(mulai, akhir);
+
+            potonganData.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${mulai + index + 1}</td>
+                        <td><strong>${item.rombel}</strong></td>
+                        <td><span class="badge badge-blue">${item.jurusan}</span></td>
+                        <td>${item.jumlah_responden} siswa</td>
+                        <td><strong>${item.rata_rata_skor}</strong></td>
+                        <td><span class="badge badge-green">${item.kategori_persen["Sangat Baik"]}%</span></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("info-halaman-rombel").textContent = `Halaman ${halamanRombel} dari ${totalHalaman}`;
+            document.getElementById("btn-prev").disabled = (halamanRombel === 1);
+            document.getElementById("btn-next").disabled = (halamanRombel === totalHalaman);
+        }
+
+        function gantiHalamanRombel(arah) {
+            halamanRombel += arah;
+            renderTabelRombel();
+        }
+
+        // Inisialisasi Data & Grafik saat Halaman Dimuat
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof DATA_ENERGI === "undefined") {
+                alert("File data-perilaku-energi.js tidak ditemukan!");
+                return;
+            }
+
+            // 1. Isi Header & Summary Cards
+            document.getElementById("judul-kuesioner").textContent = DATA_ENERGI.meta.judul;
+            document.getElementById("subjudul-kuesioner").textContent = `${DATA_ENERGI.meta.skala} (${DATA_ENERGI.meta.catatan_privasi})`;
+            
+            document.getElementById("stat-responden").textContent = DATA_ENERGI.meta.jumlah_responden;
+            document.getElementById("stat-partisipasi").textContent = `Partisipasi ${DATA_ENERGI.meta.persen_partisipasi}% dari ${DATA_ENERGI.meta.jumlah_siswa_terdata} siswa`;
+            document.getElementById("stat-rata").textContent = DATA_ENERGI.ringkasan.rata_rata_skor;
+            document.getElementById("stat-sangat-baik").textContent = DATA_ENERGI.ringkasan.kategori["Sangat Baik"] + " Siswa";
+            document.getElementById("stat-persen-sb").textContent = `${DATA_ENERGI.ringkasan.kategori_persen["Sangat Baik"]}% dari total responden`;
+            document.getElementById("stat-jurusan-top").textContent = DATA_ENERGI.ringkasan.sorotan.jurusan_tertinggi;
+
+            // 2. Grafik Kategori (Doughnut Chart)
+            new Chart(document.getElementById('chartKategori'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(DATA_ENERGI.ringkasan.kategori),
+                    datasets: [{
+                        data: Object.values(DATA_ENERGI.ringkasan.kategori),
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+                    }]
+                }
+            });
+
+            // 3. Grafik Per Butir (Bar Chart)
+            new Chart(document.getElementById('chartButir'), {
+                type: 'bar',
+                data: {
+                    labels: DATA_ENERGI.per_butir.map(b => b.kode),
+                    datasets: [{
+                        label: 'Rata-rata Skor',
+                        data: DATA_ENERGI.per_butir.map(b => b.rata_rata),
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: { scales: { y: { min: 2.5, max: 4 } } }
+            });
+
+            // 4. Tabel Detail Butir
+            const tbodyButir = document.getElementById("tabel-butir");
+            DATA_ENERGI.per_butir.forEach(b => {
+                tbodyButir.innerHTML += `
+                    <tr>
+                        <td><strong>${b.kode}</strong></td>
+                        <td>${b.pertanyaan}</td>
+                        <td><span class="badge badge-green">${b.rata_rata}</span></td>
+                        <td>${b.persen_sering}%</td>
+                    </tr>
+                `;
+            });
+
+            // 5. Grafik & Tabel Per Jurusan
+            new Chart(document.getElementById('chartJurusan'), {
+                type: 'bar',
+                data: {
+                    labels: DATA_ENERGI.per_jurusan.map(j => j.kode),
+                    datasets: [{
+                        label: 'Rata-rata Skor Jurusan',
+                        data: DATA_ENERGI.per_jurusan.map(j => j.rata_rata_skor),
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: { scales: { y: { min: 2.5, max: 4 } } }
+            });
+
+            const tbodyJurusan = document.getElementById("tabel-jurusan");
+            DATA_ENERGI.per_jurusan.forEach(j => {
+                tbodyJurusan.innerHTML += `
+                    <tr>
+                        <td><strong>${j.kode}</strong></td>
+                        <td>${j.nama}</td>
+                        <td>${j.jumlah_responden} siswa</td>
+                        <td><strong>${j.rata_rata_skor}</strong></td>
+                        <td><span class="badge badge-green">${j.kategori_persen["Sangat Baik"]}%</span></td>
+                    </tr>
+                `;
+            });
+
+            // 6. Render Tabel Rombel (Halaman 1)
+            renderTabelRombel();
+
+            // 7. Grafik Rayon & Gaya Belajar
+            new Chart(document.getElementById('chartRayon'), {
+                type: 'bar',
+                data: {
+                    labels: DATA_ENERGI.per_rayon.map(r => r.rayon),
+                    datasets: [{
+                        label: 'Rata-rata Skor Rayon',
+                        data: DATA_ENERGI.per_rayon.map(r => r.rata_rata_skor),
+                        backgroundColor: '#059669',
+                        borderRadius: 6
+                    }]
+                },
+                options: { indexAxis: 'y', scales: { x: { min: 3.0, max: 3.6 } } }
+            });
+
+            new Chart(document.getElementById('chartGayaBelajar'), {
+                type: 'pie',
+                data: {
+                    labels: DATA_ENERGI.per_gaya_belajar.map(g => `${g.gaya_belajar} (Rata-rata: ${g.rata_rata_skor})`),
+                    datasets: [{
+                        data: DATA_ENERGI.per_gaya_belajar.map(g => g.jumlah_responden),
+                        backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6']
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
