@@ -900,7 +900,155 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* ================= 12. ACCESSIBILITY & RESPONSIVE ================= */
+/* ================= 12. ANIMASI & INTERAKSI MIKRO ================= */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Entrance Animations */
+.page-header {
+    animation: fadeInUp 0.5s var(--ease-out) both;
+}
+
+.hero-text-wrap {
+    animation: fadeInUp 0.6s var(--ease-out) both;
+}
+
+.hero-stats-strip {
+    animation: fadeInUp 0.6s var(--ease-out) 0.12s both;
+}
+
+.home-pillars-section {
+    animation: fadeInUp 0.6s var(--ease-out) 0.22s both;
+}
+
+.home-cta-card {
+    animation: fadeInUp 0.6s var(--ease-out) 0.32s both;
+}
+
+.stats-grid .stat-card:nth-child(1) { animation: fadeInUp 0.5s var(--ease-out) 0.05s both; }
+.stats-grid .stat-card:nth-child(2) { animation: fadeInUp 0.5s var(--ease-out) 0.12s both; }
+.stats-grid .stat-card:nth-child(3) { animation: fadeInUp 0.5s var(--ease-out) 0.19s both; }
+.stats-grid .stat-card:nth-child(4) { animation: fadeInUp 0.5s var(--ease-out) 0.26s both; }
+
+.chart-box {
+    animation: fadeInScale 0.6s var(--ease-out) 0.15s both;
+}
+
+.insight-box {
+    animation: fadeInScale 0.6s var(--ease-out) 0.24s both;
+}
+
+.grid-3 .card:nth-child(1) { animation: fadeInUp 0.5s var(--ease-out) 0.1s both; }
+.grid-3 .card:nth-child(2) { animation: fadeInUp 0.5s var(--ease-out) 0.2s both; }
+.grid-3 .card:nth-child(3) { animation: fadeInUp 0.5s var(--ease-out) 0.3s both; }
+
+.habit-tracker-box {
+    animation: fadeInUp 0.6s var(--ease-out) 0.32s both;
+}
+
+/* Hover Micro-Interactions */
+.card,
+.stat-card,
+.chart-box,
+.insight-box,
+.habit-tracker-box,
+.home-cta-card,
+.hero-stats-strip {
+    transition: transform 0.25s var(--ease-out), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover,
+.stat-card:hover,
+.chart-box:hover,
+.insight-box:hover,
+.habit-tracker-box:hover,
+.home-cta-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(234, 179, 8, 0.45);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 16px rgba(234, 179, 8, 0.12);
+}
+
+.btn {
+    transition: background-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.logo img {
+    transition: transform 0.25s var(--ease-out);
+}
+
+.logo:hover img {
+    transform: scale(1.1) rotate(-6deg);
+}
+
+.pillar-icon {
+    display: inline-block;
+    transition: transform 0.25s var(--ease-out);
+}
+
+.pillar-card:hover .pillar-icon {
+    transform: translateY(-4px) scale(1.18);
+}
+
+.photo-container img {
+    transition: transform 0.35s var(--ease-out);
+}
+
+.team-card:hover .photo-container img {
+    transform: scale(1.1);
+}
+
+.tracker-item {
+    transition: transform 0.2s var(--ease-out), border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.tracker-item:hover {
+    transform: translateX(4px);
+}
+
+.tracker-item.checked .checkmark {
+    animation: checkPop 0.28s var(--ease-out);
+}
+
+/* ================= 13. ACCESSIBILITY & RESPONSIVE ================= */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
