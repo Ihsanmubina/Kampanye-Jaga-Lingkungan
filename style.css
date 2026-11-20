@@ -930,45 +930,17 @@ body {
 }
 
 /* Entrance Animations */
-.page-header {
-    animation: fadeInUp 0.5s var(--ease-out) both;
-}
-
-.hero-text-wrap {
-    animation: fadeInUp 0.6s var(--ease-out) both;
-}
-
-.hero-stats-strip {
-    animation: fadeInUp 0.6s var(--ease-out) 0.12s both;
-}
-
-.home-pillars-section {
-    animation: fadeInUp 0.6s var(--ease-out) 0.22s both;
-}
-
-.home-cta-card {
-    animation: fadeInUp 0.6s var(--ease-out) 0.32s both;
-}
-
-.stats-grid .stat-card:nth-child(1) { animation: fadeInUp 0.5s var(--ease-out) 0.05s both; }
-.stats-grid .stat-card:nth-child(2) { animation: fadeInUp 0.5s var(--ease-out) 0.12s both; }
-.stats-grid .stat-card:nth-child(3) { animation: fadeInUp 0.5s var(--ease-out) 0.19s both; }
-.stats-grid .stat-card:nth-child(4) { animation: fadeInUp 0.5s var(--ease-out) 0.26s both; }
-
-.chart-box {
-    animation: fadeInScale 0.6s var(--ease-out) 0.15s both;
-}
-
-.insight-box {
-    animation: fadeInScale 0.6s var(--ease-out) 0.24s both;
-}
-
-.grid-3 .card:nth-child(1) { animation: fadeInUp 0.5s var(--ease-out) 0.1s both; }
-.grid-3 .card:nth-child(2) { animation: fadeInUp 0.5s var(--ease-out) 0.2s both; }
-.grid-3 .card:nth-child(3) { animation: fadeInUp 0.5s var(--ease-out) 0.3s both; }
-
+.page-header,
+.hero-text-wrap,
+.hero-stats-strip,
+.home-pillars-section,
+.home-cta-card,
+.stats-grid .stat-card,
+.chart-box,
+.insight-box,
+.grid-3 .card,
 .habit-tracker-box {
-    animation: fadeInUp 0.6s var(--ease-out) 0.32s both;
+    animation: fadeInUp 0.45s var(--ease-out);
 }
 
 /* Hover Micro-Interactions */
